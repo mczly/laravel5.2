@@ -11,23 +11,38 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
-Route::get('/test/{id?}',function ($id){
+});*/
+/*Route::get('/test/{id?}',function ($id){
     return 'test'.$id;
 });
 Route::get('/a/{catid}',function ($catid){
     return $catid;
-});
+});*/
 Route::get('/index','IndexController@index');
+Route::get('/view','ViewController@view');
+Route::get('/article','ViewController@article');
+Route::get('/layouts','ViewController@layouts');
 
 //Route::get('/admin/index','admin\IndexController@index');
 
-Route::group(['prefix' => 'admin','namespace' => 'admin'],function (){
+Route::group(['prefix' => 'admin','namespace' => 'admin','middleware'=>['web','admin.login']],function (){
+    //Route::get('/login','IndexController@login');
     Route::get('/index','IndexController@index');
-    Route::get('/login','IndexController@login');
     Route::resource('article','ArticleController');
+    Route::resource('category','CategoryController');
 });
 
+Route::group(['middleware'=>'web'], function () {
+
+    Route::get('admin/login','admin\IndexController@login');
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    Route::get('/test', function () {
+        return view('welcome');
+    });
+});
 
